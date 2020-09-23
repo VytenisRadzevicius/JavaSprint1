@@ -10,7 +10,6 @@ public class Main {
 
         int items;
         String name;
-        String price;
 
         Scanner myScanner = new Scanner(System.in);
 
@@ -22,7 +21,7 @@ public class Main {
         }
 
         while(true) {
-            System.out.println("Kiek prekiu noresite prideti? (tarp 0 ir 100): ");
+            System.out.println("Kiek prekių norėsite pridėti? (tarp 0 ir 100): ");
 
             // check item number input
             try {
@@ -32,7 +31,7 @@ public class Main {
                 }
                 else {
                     myScanner.nextLine();
-                    throw new Exception("Klaida! Iveskite taisyklingus duomenis.");
+                    throw new Exception("Klaida! Įveskite taisyklingus duomenis.");
                 }
 
                 // check item number
@@ -40,22 +39,20 @@ public class Main {
 
                     // enter items
                     for (int i = 0; i < items; i++) {
-                        System.out.println("Iveskite " + (i + 1) + " prekes pavadinima: ");
+                        System.out.println("Įveskite " + (i + 1) + " prekės pavadinimą: ");
                         name = myScanner.nextLine();
 
                         // check the price and format it
                         while (true) {
-                            System.out.println("Iveskite \"" + name + "\" prekes kaina: ");
+                            System.out.println("Įveskite \"" + name + "\" prekės kainą: ");
                             if (myScanner.hasNextDouble()) {
-                                DecimalFormat df = new DecimalFormat("######0.00");
-                                price = df.format(myScanner.nextDouble());
-
+                                Item newItem = new Item(name, myScanner.nextDouble());
                                 myScanner.nextLine();
 
                                 // save data to file
                                 try {
                                     FileWriter myWriter = new FileWriter("items.csv", true);
-                                    myWriter.write(name + " " + price + "\n");
+                                    myWriter.write(newItem + "\n");
                                     myWriter.close();
                                     break;
                                 } catch (Exception e) {
@@ -63,14 +60,14 @@ public class Main {
                                 }
                             } else { // invalid price
                                 myScanner.nextLine();
-                                System.out.println("Iveskite taisiklynga kaina.");
+                                System.out.println("Įveskite taisyklinga kainą.");
                             }
                         }
                     }
 
                     // return full list and exit
-                    System.out.println(items + " prekes pridetos sekmingai!");
-                    System.out.println("Visas prekiu sarasas: ");
+                    System.out.println(items + " prekės pridėtos sekmingai!");
+                    System.out.println("Visas prekių sąrašas: ");
                     try {
                         File myFile = new File("items.csv");
                         Scanner myReader = new Scanner(myFile);
@@ -100,3 +97,18 @@ public class Main {
         } // while
     } // main
 } // Main
+
+class Item {
+    String name;
+    String price;
+
+    public Item(String name, double price) {
+        this.name = name;
+        DecimalFormat df = new DecimalFormat("######0.00");
+        this.price = df.format(price);
+    }
+    @Override
+    public String toString() {
+        return this.name + " " + this.price;
+    }
+}
